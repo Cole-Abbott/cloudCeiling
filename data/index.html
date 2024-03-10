@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Smart Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to My Smart Home</h1>
+    </header>
+
+    <main>
+        <section>
+            <div class="neopixelStrip">
+                <h2>Ceiling Lights</h2>
+                <div id="ceilingDiv" >
+                    <button id="offBtnCeiling" title="off" style="background-color: #2EE59D" >Off</button>
+                    <button id="rainbowBtnCeiling" title="rainbow">Rainbow</button>
+                    <button id="solidBtnCeiling" title="solid">Solid</button>
+                    <input type="color" class="colorPicker" value="#ff0000">
+                    <input type="range" class="brightnessSlider" min="0" max="255" value="100" step="1">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="neopixelStrip">
+                <h2>Desk Lights</h2>
+                <div id="deskDiv">
+                    <button id="offBtnDesk" title="off" style="background-color: #2EE59D" >Off</button>
+                    <button id="rainbowBtnDesk" title="rainbow">Rainbow</button>
+                    <button id="solidBtnDesk" title="solid">Solid</button>
+                    <input type="color" class="colorPicker" value="#ff0000">
+                    <input type="range" class="brightnessSlider" min="0" max="255" value="100" step="1">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Cole Abbott</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

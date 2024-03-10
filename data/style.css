@@ -1,0 +1,124 @@
+/* styles.css */
+
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+
+/* Header styles */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Main styles */
+main {
+    padding: 20px;
+}
+
+/* Section styles */
+section {
+    margin-bottom: 20px;
+    
+}
+
+/* H2 styles */
+h2 {
+    margin-bottom: 10px;
+}
+
+.neopixelStrip {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    color: #f2f2f2;
+    max-width: 500px;
+}
+
+
+/* Light controls styles */
+#ceilingDiv,
+#deskDiv {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+button{
+    /* width: 75px; */
+    height: 35px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #333;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    }
+  
+
+  button:hover {
+    background-color: #2EE59D;
+    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+    transform: translateY(-4px);
+  }
+
+
+
+/* Make the slider vertical */
+input[type="range"] {
+
+    width: 100px;
+
+    margin-left: 10px;
+}
+
+input[type="color"] {
+    width: 50px;
+    height: 30px;
+    padding: 0;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+
+/* Footer styles */
+
+/* Style the footer */
+footer {
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    height: 40px;
+    width: 100%;
+}
