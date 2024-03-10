@@ -7,34 +7,33 @@ Cloud Ceiling is a smart home project that allows you to control the lighting in
 ## Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/cloudCeiling.git
+    git clone https://github.com/Cole-Abbott/cloudCeiling.git
     ```
 
-2. Install the required dependencies:
-    ```bash
-    npm install
-    ```
+2. Install PlatformIO VSCode extension
+    - [PlatformIO](https://platformio.org/)
 
 ## Usage
-1. Obtain an API key from a weather service provider.
-
-2. Create a `.env` file in the root directory of the project and add the following:
-    ```plaintext
-    WEATHER_API_KEY=your-api-key
+1. Update "myServer.h" with your WiFi credentials
+    ```c++
+    #define SSID "yourSSID"
+    #define password = "yourPassword";
     ```
+2. Update "myNeopixel.h" with your Neopixel settings, and "myNeopixels.h" to match the led strips you are using
 
-3. Start the application:
-    ```bash
-    npm start
-    ```
+3. Update "index.html" to reflect the neopixel strips you are using
 
-4. Access the application in your web browser at `http://localhost:3000`.
+4. Use PlatformIO to upload the code to your ESP32 microcontroller.
+5. Use Platform IO to upload the data folder to the SPIFFS of the ESP32.
+
+6. Open the serial monitor and wait for the ESP32 to connect to the WiFi network.
+
+7. Once connected, the ESP32 will host a web server at its IP address, which can be found in the serial monitor.
+
 
 ## Contributing
-Contributions are welcome! If you have any ideas or improvements, please submit a pull request. Make sure to follow the [contributing guidelines](CONTRIBUTING.md).
+Contributions are welcome! If you have any ideas or improvements, please submit a pull request. 
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
 
-## Contact
-For any questions or inquiries, please contact the project maintainer at [email@example.com](mailto:email@example.com).
