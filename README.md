@@ -2,7 +2,7 @@
 # Cloud Ceiling
 
 ## Description
-Cloud Ceiling is a smart home project that allows you to control the lighting in your home based on the weather conditions outside. It uses data from a weather API to determine the cloud coverage and adjusts the brightness of your ceiling lights accordingly.
+Cloud Ceiling is a smart home project that allows you to control the lighting in your home
 
 ## Installation
 1. Clone the repository:
@@ -19,7 +19,7 @@ Cloud Ceiling is a smart home project that allows you to control the lighting in
     #define SSID "yourSSID"
     #define password = "yourPassword";
     ```
-2. Update "myNeopixel.h" with your Neopixel settings, and "myNeopixels.h" to match the led strips you are using
+2. Update "myNeopixel.h" with your Neopixel settings, and "myNeopixels.cpp" to match the led strips you are using
 
 3. Update "index.html" to reflect the neopixel strips you are using
 
