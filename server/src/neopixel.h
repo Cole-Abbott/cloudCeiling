@@ -21,6 +21,7 @@ enum neopixel_mode
     RAINBOW,
     SOLID,
     FLASH,
+    TWINKLE,
     OFF
 };
 // END SECTION: ENUMS
@@ -46,6 +47,7 @@ class Neopixel
         void update_rainbow();
         void update_solid();
         void update_flash();
+        void update_twinkle();
         void update_off();
 
         void update();

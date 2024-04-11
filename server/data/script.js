@@ -92,7 +92,7 @@ function addEventListeners(strip) {
 		var b = parseInt(color.slice(5, 7), 16);
 		const message = "color " + strip + " " + r + " " + g + " " + b;
 		websocket.send(message);
-		console.log(message);
+		// console.log(message);
 	});
 	// event listener for the brightness slider
 	div.getElementsByClassName('brightnessSlider')[0].addEventListener('input', function () {
@@ -102,7 +102,7 @@ function addEventListeners(strip) {
 		var brightness = this.value;
 		const message = "brightness " + strip + " " + brightness;
 		websocket.send(message);
-		console.log(message);
+		// console.log(message);
 	});
 
 

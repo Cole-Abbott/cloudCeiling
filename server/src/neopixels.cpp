@@ -73,6 +73,16 @@ void Neopixels::parse_command(char *payload)
         sscanf((char *)payload, "solid %s", &strip);
         set_mode(strip, SOLID);
     }
+    else if (strstr((char *)payload, "flash"))
+    {
+        sscanf((char *)payload, "flash %s", &strip);
+        set_mode(strip, FLASH);
+    }
+    else if (strstr((char *)payload, "twinkle"))
+    {
+        sscanf((char *)payload, "twinkle %s", &strip);
+        set_mode(strip, TWINKLE);
+    }
     else if (strstr((char *)payload, "brightness"))
     {
         int brightness;
