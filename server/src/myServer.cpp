@@ -165,6 +165,7 @@ void handleWebSocketMessage(uint8_t num, WStype_t type, uint8_t *payload, size_t
     if (type == WStype_TEXT)
     {
         neopixels.parse_command((char *)payload);
+        Serial.printf("Received command: %s\r\n", payload);
     }
 } // end handleWebSocketMessage
 

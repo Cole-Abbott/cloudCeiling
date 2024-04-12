@@ -1,0 +1,16 @@
+{
+    "neopixel_strips": [
+        {
+            "strip_id": "ceiling",
+            "state": "on",
+            "brightness": 100,
+            "color": "#FF0000"
+        },
+        {
+            "strip_id": "desk",
+            "state": "off",
+            "brightness": 0,
+            "color": "#000000"
+        }
+    ]
+}
