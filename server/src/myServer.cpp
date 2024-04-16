@@ -159,13 +159,11 @@ void handleWebSocketMessage(uint8_t num, WStype_t type, uint8_t *payload, size_t
     // Serial.printf("WebSocket client #%u message\r\n", num);
     // Serial.printf("Type: %u\r\n", type);
     // Serial.printf("Payload: %s\r\n", payload);
-    // Serial.printf("Length: %u\r\n", len);
-
+    // Serial.printf("Length: %u\r\n", len);0   
     //handle text message by changing neopixel mode
     if (type == WStype_TEXT)
     {
         neopixels.parse_command((char *)payload);
-        Serial.printf("Received command: %s\r\n", payload);
     }
 } // end handleWebSocketMessage
 
@@ -189,6 +187,7 @@ void onEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t len)
         Serial.printf("WebSocket client #%u connected from %d.%d.%d.%d url: %s\r\n", num, ip[0], ip[1], ip[2], ip[3], payload);
         websocket_conn_count = ws.connectedClients();
         Serial.printf("Total connected clients: %u\r\n", websocket_conn_count);
+        neopixels.send_state();
         break;
     case WStype_DISCONNECTED:
         Serial.printf("WebSocket client #%u disconnected\r\n", num);

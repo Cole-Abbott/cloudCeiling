@@ -6,10 +6,12 @@
 
 
 #define SSID "Device-Northwestern" // WiFi SSID
+#define SERVER_IP "10.106.6.244" // Server IP Address
 
 // Create a WebSocket object
 extern WebSocketsClient webSocket;
-
+extern JsonDocument state;
 
 //function prototypes
 void connect_websocket();
+void send_state();

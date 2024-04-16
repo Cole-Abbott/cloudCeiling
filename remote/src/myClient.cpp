@@ -5,9 +5,13 @@
 void connect_wifi();
 void webSocketEvent(WStype_t type, uint8_t *payload, size_t length);
 void client_loop_task(void *pvParameters);
+void update_state(uint8_t *payload);
 
+
+// Global Variables
 WebSocketsClient webSocket;
-
+// state
+JsonDocument state;
 
 /**
  * @brief Connects to the websocket
@@ -38,7 +42,6 @@ void connect_websocket()
         CONFIG_ARDUINO_RUNNING_CORE); // Core where the task should run
 
 }
-
 
 
 /**
@@ -85,6 +88,7 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
         break;
     case WStype_TEXT:
         Serial.printf("[WSc] get text: %s\n", payload);
+        update_state(payload);
         break;
     case WStype_BIN:
         Serial.printf("[WSc] get binary length: %u\n", length);
@@ -105,3 +109,36 @@ void client_loop_task(void *pvParameters)
         delay(50);
     }
 } // end client_loop_task
+
+
+/**
+ * @brief Updates the state of the device
+ *
+ * @param payload
+ */
+void update_state(uint8_t *payload)
+{
+    // Parse the JSON object
+    JsonDocument doc;
+    deserializeJson(doc, payload);
+
+    // copy the new state into the global state
+    state = doc;
+
+} // end update_state
+
+
+
+/**
+ * @brief Sends the state of the device to the server
+ *
+ */
+void send_state()
+{
+    // Serialize the JSON object
+    String output;
+    serializeJson(state, output);
+
+    // Send the state to the server
+    webSocket.sendTXT(output);
+} // end send_state

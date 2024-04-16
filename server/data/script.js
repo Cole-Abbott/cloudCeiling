@@ -4,6 +4,9 @@ var b = document.getElementById('btnWS');
 var buttonClicked = false;
 var webcamState = false;
 
+//global state variable
+var state;
+
 // Initialize the websocket
 function init() {
 	if (window.location.hostname != "") {
@@ -47,7 +50,13 @@ function onClose(evt) { // when socket is closed:
 }
 
 function onMessage(msg) {
-	console.log(msg);
+	//turn the message into a json object
+	const message = JSON.parse(msg.data);
+	console.log(message);
+	//update the state
+	state = message;
+	//update the buttons
+	updateButtons();
 }
 
 function onError(evt) { // when an error occurs
@@ -60,7 +69,6 @@ function onError(evt) { // when an error occurs
 // Set up event listeners
 
 
-
 // add event listeners for all the buttons in a div
 function addEventListeners(strip) {
 	var div = document.getElementById(strip + 'Div');
@@ -70,13 +78,9 @@ function addEventListeners(strip) {
 			if (webcamState == false) {
 				doConnect();
 			}
-			websocket.send(this.title + " " + strip);
-			//make the button have background-color: #2EE59D;
-			// make the other buttons have background-color: #f2f2f2;
-			for (var j = 0; j < buttons.length; j++) {
-				buttons[j].style.backgroundColor = "#f2f2f2";
-			}
-			this.style.backgroundColor = "#2EE59D";
+			//update the state and send it back
+			state[strip].mode = this.title;
+			websocket.send(JSON.stringify(state));
 		});
 	}
 	// event listener for the color picker
@@ -90,9 +94,13 @@ function addEventListeners(strip) {
 		var r = parseInt(color.slice(1, 3), 16);
 		var g = parseInt(color.slice(3, 5), 16);
 		var b = parseInt(color.slice(5, 7), 16);
-		const message = "color " + strip + " " + r + " " + g + " " + b;
-		websocket.send(message);
-		// console.log(message);
+
+		//update the state and send it back
+		state[strip].color.r = r;
+		state[strip].color.g = g;
+		state[strip].color.b = b;
+		websocket.send(JSON.stringify(state));
+
 	});
 	// event listener for the brightness slider
 	div.getElementsByClassName('brightnessSlider')[0].addEventListener('input', function () {
@@ -100,13 +108,74 @@ function addEventListeners(strip) {
 			doConnect();
 		}
 		var brightness = this.value;
-		const message = "brightness " + strip + " " + brightness;
-		websocket.send(message);
+
+		//update the state and send it back
+		state[strip].brightness = brightness;
+		
+		websocket.send(JSON.stringify(state));
 		// console.log(message);
 	});
 
 
 }
+
+
+// Function to update the buttons based on the state
+function updateButtons() {
+	// get the buttons
+	const ceilingDiv = document.getElementById('ceilingDiv');
+	const deskDiv = document.getElementById('deskDiv');
+	const ceilingButtons = ceilingDiv.getElementsByTagName('button');
+	const deskButtons = deskDiv.getElementsByTagName('button');
+	// get the color pickers
+	const ceilingColorPicker = ceilingDiv.getElementsByClassName('colorPicker')[0];
+	const deskColorPicker = deskDiv.getElementsByClassName('colorPicker')[0];
+	// get the brightness sliders
+	const ceilingBrightnessSlider = ceilingDiv.getElementsByClassName('brightnessSlider')[0];
+	const deskBrightnessSlider = deskDiv.getElementsByClassName('brightnessSlider')[0];
+	// update the buttons
+	for (var i = 0; i < ceilingButtons.length; i++) {
+		if (state.ceiling.mode == ceilingButtons[i].title) {
+			ceilingButtons[i].style.backgroundColor = "#2EE59D";
+		} else {
+			ceilingButtons[i].style.backgroundColor = "#f2f2f2";
+		}
+	}
+	for (var i = 0; i < deskButtons.length; i++) {
+		if (state.desk.mode == deskButtons[i].title) {
+			deskButtons[i].style.backgroundColor = "#2EE59D";
+		} else {
+			deskButtons[i].style.backgroundColor = "#f2f2f2";
+		}
+	}
+	// update the color pickers
+	ceilingColorPicker.value = rgbToHex(state.ceiling.color.r, state.ceiling.color.g, state.ceiling.color.b);
+	deskColorPicker.value = rgbToHex(state.desk.color.r, state.desk.color.g, state.desk.color.b);
+	// update the brightness sliders
+	ceilingBrightnessSlider.value = state.ceiling.brightness;
+	deskBrightnessSlider.value = state.desk.brightness;
+}
+
+// Function to convert rgb to hex
+function rgbToHex(r, g, b) {
+	r = r.toString(16);
+	g = g.toString(16);
+	b = b.toString(16);
+
+	if (r.length == 1) {
+		r = "0" + r;
+	}
+	if (g.length == 1) {
+		g = "0" + g;
+	}
+	if (b.length == 1) {
+		b = "0" + b;
+	}
+
+	return "#" + r + g + b;
+}
+
+
 
 // add event listeners for all the buttons
 addEventListeners('ceiling');

@@ -1,5 +1,8 @@
 // SECTION: INCLUDES
 #include "neopixels.h"
+#include <ArduinoJson.h>
+#include "myServer.h"
+
 // END SECTION: INCLUDES
 
 // SECTION: NEOPIXELS CLASS DEFINITION
@@ -10,7 +13,7 @@ Neopixels::Neopixels()
 
 void Neopixels::add_strip(String name, int pin, int num_pixels)
 {
-    //strips[name] = Neopixel(pin, num_pixels);
+    // strips[name] = Neopixel(pin, num_pixels);
     strips[name] = new Neopixel(pin, num_pixels);
 
     if (strips[name] == NULL)
@@ -18,9 +21,15 @@ void Neopixels::add_strip(String name, int pin, int num_pixels)
         Serial.println("Failed to allocate memory for neopixel strip");
     }
 
+    // add the strip to the state
+    state[name]["mode"] = "off";
+    state[name]["brightness"] = 100;
+    state[name]["color"]["r"] = 0;
+    state[name]["color"]["g"] = 0;
+    state[name]["color"]["b"] = 0;
 }
 
-void Neopixels::set_mode(String name, neopixel_mode new_mode)
+void Neopixels::set_mode(String name, String new_mode)
 {
     // check if the strip exists
     if (strips.find(name) == strips.end())
@@ -28,17 +37,43 @@ void Neopixels::set_mode(String name, neopixel_mode new_mode)
         Serial.printf("Neopixel strip %s not found\n", name.c_str());
         return;
     }
-    strips[name]->set_mode(new_mode);
+    if (new_mode == "rainbow")
+    {
+        strips[name]->set_mode(RAINBOW);
+    }
+    else if (new_mode == "off")
+    {
+        strips[name]->set_mode(OFF);
+    }
+    else if (new_mode == "solid")
+    {
+        strips[name]->set_mode(SOLID);
+    }
+    else if (new_mode == "flash")
+    {
+        strips[name]->set_mode(FLASH);
+    }
+    else if (new_mode == "twinkle")
+    {
+        strips[name]->set_mode(TWINKLE);
+    }
+
+    // update the state
+    state[name]["mode"] = new_mode;
 }
 
 void Neopixels::set_brightness(String name, int new_brightness)
 {
     strips[name]->set_brightness(new_brightness);
+    state[name]["brightness"] = new_brightness;
 }
 
 void Neopixels::set_color(String name, int r, int g, int b)
 {
     strips[name]->set_color(r, g, b);
+    state[name]["color"]["r"] = r;
+    state[name]["color"]["g"] = g;
+    state[name]["color"]["b"] = b;
 }
 
 // Update all the neopixel strips
@@ -52,51 +87,56 @@ void Neopixels::update()
     // strips["desk"]->update();
 }
 
-//parse the command from the websocket
+// parse the command from the websocket
 void Neopixels::parse_command(char *payload)
 {
-    //String strip;
-    char strip[20];
+    // //String strip;
+    // char strip[20];
 
-    if (strstr((char *)payload, "rainbow"))
+    // //parse JSON
+    JsonDocument doc;
+    deserializeJson(doc, payload);
+
+
+    // loop through the strips
+    for (auto &S : strips)
     {
-        sscanf((char *)payload, "rainbow %s", &strip);
-        set_mode(strip, RAINBOW);
+        // check if the strip exists
+        if (doc[S.first] == nullptr)
+        {
+            Serial.printf("Neopixel strip %s not found\n", S.first.c_str());
+            continue;
+        }
+
+        // set the mode
+        set_mode(S.first, doc[S.first]["mode"]);
+
+        // set the brightness
+        set_brightness(S.first, doc[S.first]["brightness"].as<int>());
+
+        // set the color
+        set_color(S.first, doc[S.first]["color"]["r"].as<int>(), doc[S.first]["color"]["g"].as<int>(), doc[S.first]["color"]["b"].as<int>());
     }
-    else if (strstr((char *)payload, "off"))
-    {
-        sscanf((char *)payload, "off %s", &strip);
-        set_mode(strip, OFF);
-    }
-    else if (strstr((char *)payload, "solid"))
-    {
-        sscanf((char *)payload, "solid %s", &strip);
-        set_mode(strip, SOLID);
-    }
-    else if (strstr((char *)payload, "flash"))
-    {
-        sscanf((char *)payload, "flash %s", &strip);
-        set_mode(strip, FLASH);
-    }
-    else if (strstr((char *)payload, "twinkle"))
-    {
-        sscanf((char *)payload, "twinkle %s", &strip);
-        set_mode(strip, TWINKLE);
-    }
-    else if (strstr((char *)payload, "brightness"))
-    {
-        int brightness;
-        sscanf((char *)payload, "brightness %s %d", &strip, &brightness);
-        set_brightness(strip, brightness);
-    }
-    else if (strstr((char *)payload, "color"))
-    {
-        int r, g, b;
-        sscanf((char *)payload, "color %s %d %d %d", &strip, &r, &g, &b);
-        set_color(strip, r, g, b);
-    }
-    else
-    {
-        Serial.printf("Unknown command: %s\n", payload);
-    }
+
+    // send the new state to the websocket
+    send_state();
+
+}
+
+// print the state of the neopixels to the serial monitor
+void Neopixels::print_state()
+{
+    // serialize the state
+    String output;
+    serializeJsonPretty(state, output);
+    Serial.println(output);
+}
+
+// send the state of the neopixels to the websocket
+void Neopixels::send_state()
+{
+    // serialize the state
+    String output;
+    serializeJsonPretty(state, output);
+    ws.broadcastTXT(output);
 }

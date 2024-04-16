@@ -1,10 +1,12 @@
 #include <Arduino.h>
-#include <myClient.h>
+#include "myClient.h"
+#include "remote.h"
 
 
 void setup() {
   Serial.begin(115200);
   connect_websocket();
+  init_remote();
   
 }
 
